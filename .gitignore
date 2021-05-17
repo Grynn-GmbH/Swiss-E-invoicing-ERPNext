@@ -3,4 +3,5 @@
 *.egg-info
 *.swp
 tags
+.vscode
 swiss_factur_x_e_invoicing/docs/current
