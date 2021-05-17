@@ -1,0 +1,18 @@
+include MANIFEST.in
+include requirements.txt
+include *.json
+include *.md
+include *.py
+include *.txt
+recursive-include swiss_factur_x_e_invoicing *.css
+recursive-include swiss_factur_x_e_invoicing *.csv
+recursive-include swiss_factur_x_e_invoicing *.html
+recursive-include swiss_factur_x_e_invoicing *.ico
+recursive-include swiss_factur_x_e_invoicing *.js
+recursive-include swiss_factur_x_e_invoicing *.json
+recursive-include swiss_factur_x_e_invoicing *.md
+recursive-include swiss_factur_x_e_invoicing *.png
+recursive-include swiss_factur_x_e_invoicing *.py
+recursive-include swiss_factur_x_e_invoicing *.svg
+recursive-include swiss_factur_x_e_invoicing *.txt
+recursive-exclude swiss_factur_x_e_invoicing *.pyc
