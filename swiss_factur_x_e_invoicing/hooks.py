@@ -91,13 +91,13 @@ app_license = "MIT"
 # ---------------
 # Hook on document methods and events
 
-# doc_events = {
-# 	"*": {
-# 		"on_update": "method",
-# 		"on_cancel": "method",
-# 		"on_trash": "method"
-#	}
-# }
+doc_events = {
+    "Sales Invoice": {
+        "on_submit": "swiss_factur_x_e_invoicing.attach_e_pdf.attach_e_pdf",
+        "on_cancel": "method",
+        "on_trash": "method"
+    }
+}
 
 # Scheduled Tasks
 # ---------------
@@ -142,4 +142,3 @@ app_license = "MIT"
 # exempt linked doctypes from being automatically cancelled
 #
 # auto_cancel_exempted_doctypes = ["Auto Repeat"]
-
