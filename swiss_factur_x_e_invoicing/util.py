@@ -1,5 +1,5 @@
 import frappe
-from os import path,
+from os import path
 
 
 def get_pdf_data(doctype, name):
