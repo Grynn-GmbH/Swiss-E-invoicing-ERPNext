@@ -9,7 +9,7 @@ file.close()
 
 
 def get_uom_code(code):
-    if not codes[code]:
+    if not codes.get(code):
         return 'C62'
 
     return codes[code]
