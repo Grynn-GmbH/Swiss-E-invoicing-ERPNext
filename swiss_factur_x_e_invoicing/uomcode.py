@@ -1,7 +1,9 @@
 import json
 from os import path, getcwd
 
-file = open(path.join(getcwd(), 'uomcodes.json'))
+
+directory = path.dirname(path.realpath(__file__))
+file = open(path.join(directory, 'uomcodes.json'))
 
 codes = json.load(file)
 
