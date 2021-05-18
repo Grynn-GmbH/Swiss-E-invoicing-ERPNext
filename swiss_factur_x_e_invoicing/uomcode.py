@@ -1,12 +1,10 @@
 import json
 from os import path, getcwd
+from .util import app_file
 
 
-directory = path.dirname(path.realpath(__file__))
-file = open(path.join(directory, 'uomcodes.json'))
-
+file = open(app_file('uomcodes.json'))
 codes = json.load(file)
-
 file.close()
 
 
