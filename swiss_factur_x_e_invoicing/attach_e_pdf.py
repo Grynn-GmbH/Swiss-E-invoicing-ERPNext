@@ -5,7 +5,7 @@ from facturx import generate_facturx_from_file
 import html
 from .uomcode import get_uom_code
 from .constant import raw_address
-from .util import app_file
+from .util import app_file, get_pdf_data
 
 
 def attach_e_pdf(doc, events=None):
@@ -96,5 +96,5 @@ def attach_e_pdf(doc, events=None):
         data['customer_address'] = raw_address
     with open(app_file('factur.html')) as f:
         xml = frappe.render_template(f.read(), data)
-        print(xml)
+        pdf_data = get_pdf_data(doc.doctype, doc.name)
         pass
