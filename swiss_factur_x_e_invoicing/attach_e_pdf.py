@@ -98,6 +98,7 @@ def attach_e_pdf(doc, events=None):
         data['customer_address'] = raw_address
     with open(app_file('factur.html')) as f:
         xml = frappe.render_template(f.read(), data)
+        print(xml)
         pdf_data = get_pdf_data(doc.doctype, doc.name)
         pdf = generate_facturx_from_binary(pdf_data, xml.encode('utf-8'))
         save_and_attach(pdf, doc.doctype, doc.name)
