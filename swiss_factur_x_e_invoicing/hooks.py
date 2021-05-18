@@ -94,8 +94,6 @@ app_license = "MIT"
 doc_events = {
     "Sales Invoice": {
         "on_submit": "swiss_factur_x_e_invoicing.attach_e_pdf.attach_e_pdf",
-        "on_cancel": "method",
-        "on_trash": "method"
     }
 }
 
