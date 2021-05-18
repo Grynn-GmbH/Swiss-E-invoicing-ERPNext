@@ -1,11 +1,13 @@
 # Facturx
+from io import StringIO
+from facturx.facturx import generate_facturx_from_file
 import frappe
 from frappe import _
-from facturx import generate_facturx_from_file
+from facturx import generate_facturx_from_binary
 import html
 from .uomcode import get_uom_code
 from .constant import raw_address
-from .util import app_file, get_pdf_data
+from .util import app_file, get_pdf_data, save_and_attach
 
 
 def attach_e_pdf(doc, events=None):
@@ -97,4 +99,5 @@ def attach_e_pdf(doc, events=None):
     with open(app_file('factur.html')) as f:
         xml = frappe.render_template(f.read(), data)
         pdf_data = get_pdf_data(doc.doctype, doc.name)
-        pass
+        pdf = generate_facturx_from_binary(pdf_data, xml.encode('utf-8'))
+        save_and_attach(pdf, doc.doctype, doc.name)
