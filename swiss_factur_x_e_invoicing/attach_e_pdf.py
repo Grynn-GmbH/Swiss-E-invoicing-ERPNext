@@ -3,6 +3,7 @@ import frappe
 from frappe import _
 from facturx import generate_facturx_from_file
 import html
+from .uomcode import get_uom_code
 
 
 def attach_e_pdf(doc, events=None):
