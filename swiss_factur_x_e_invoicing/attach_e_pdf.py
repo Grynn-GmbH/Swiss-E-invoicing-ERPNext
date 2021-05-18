@@ -95,6 +95,6 @@ def attach_e_pdf(doc, events=None):
     else:
         data['customer_address'] = raw_address
 
-    xml = frappe.render_template(app_file('factur.html'))
+    xml = frappe.render_template(app_file('factur.html'), data)
     print(xml)
     pass
