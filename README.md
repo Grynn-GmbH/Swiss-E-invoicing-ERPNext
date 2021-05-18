@@ -4,4 +4,4 @@ A E-Invoice PDF Creation library
 
 #### License
 
-MIT
+GPL V3
