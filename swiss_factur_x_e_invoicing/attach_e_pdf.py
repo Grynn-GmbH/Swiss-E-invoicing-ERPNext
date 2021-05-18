@@ -63,14 +63,17 @@ def attach_e_pdf(doc, events=None):
 
     # Company
     company_address = frappe.get_doc("Address", doc.company_address)
-
     if company_address:
+
+        company_address_code = frappe.get_value(
+            "Country", company_address.country, "code").upper()
+
         data['company_address'] = {
-            'address_line1': html.escape(company_address['address_line1'] or ""),
-            'address_line2': html.escape(company_address['address_line2'] or ""),
-            'pincode': html.escape(company_address['pincode'] or ""),
-            'city': html.escape(company_address['city'] or ""),
-            'country_code': company_address['country_code'] or "CH"
+            'address_line1': html.escape(company_address.address_line1 or ""),
+            'address_line2': html.escape(company_address.address_line2 or ""),
+            'pincode': html.escape(company_address.pincode or ""),
+            'city': html.escape(company_address.city or ""),
+            'country_code': company_address_code or "CH"
         }
     else:
         data['company_address'] = raw_address
@@ -82,10 +85,10 @@ def attach_e_pdf(doc, events=None):
             "Country", customer_address.country, "code").upper()
 
         data['customer_address'] = {
-            'address_line1': html.escape(customer_address['address_line1'] or ""),
-            'address_line2': html.escape(customer_address['address_line2'] or ""),
-            'pincode': html.escape(customer_address['pincode'] or ""),
-            'city': html.escape(customer_address['city'] or ""),
+            'address_line1': html.escape(customer_address.address_line1 or ""),
+            'address_line2': html.escape(customer_address.address_line2 or ""),
+            'pincode': html.escape(customer_address.pincode or ""),
+            'city': html.escape(customer_address.city or ""),
             'country_code': customer_country_code or "CH"
         }
     else:
