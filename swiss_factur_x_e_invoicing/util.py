@@ -17,3 +17,7 @@ def app_dir():
 def get_xml_path():
     appdir = app_dir()
     return path.join(app_dir, 'factur.html')
+
+
+def app_file(file):
+    return path.join(app_dir(), file)
