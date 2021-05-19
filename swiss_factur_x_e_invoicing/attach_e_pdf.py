@@ -1,6 +1,5 @@
 # Facturx
 from io import StringIO
-from facturx.facturx import generate_facturx_from_file
 import frappe
 from frappe import _
 from facturx import generate_facturx_from_binary
@@ -15,15 +14,14 @@ def attach_e_pdf(doc, events=None):
     # Data For Company
     data = {
         'name': html.escape(doc.name),
-        # 'issue_date': "{year:04d}{month:02d}{day:02d}".format(
-        #     year=company.posting_date.year, month=company.posting_date.month, day=company.posting_date.day),
+        'issue_date': doc.posting_date,
         'company': html.escape(doc.company),
         'tax_id': html.escape(doc.tax_id or ""),
         'customer': html.escape(doc.customer),
         'customer_name': html.escape(doc.customer_name),
         'currency': doc.currency,
         'payment_terms': html.escape(doc.payment_terms_template or ""),
-        # 'due_date': "{year:04d}{month:02d}{day:02d}".format( year=company.due_date.year, month=company.due_date.month, day=company.due_date.day),
+        'due_date': doc.due_date,
         'total': doc.total,
         'discount': (doc.total - doc.net_total),
         'net_total': doc.net_total,
