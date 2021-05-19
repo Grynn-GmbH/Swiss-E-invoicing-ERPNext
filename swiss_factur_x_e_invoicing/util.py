@@ -15,8 +15,8 @@ def save_and_attach(content, to_doctype, to_name):
     """
     Attach Pdf to Doctype
     """
-    file_name = "{}.pdf".format(to_name.replace(" ", "-").replace("/", "-"))
-    save_file(file_name, content, to_doctype, file_name,  is_private=1)
+    file_name = "{}.pdf".format(to_name.replace(" ", "-"))
+    save_file(file_name, content, to_doctype, to_name,  is_private=1)
 
 
 def app_dir():
@@ -25,7 +25,7 @@ def app_dir():
 
 def get_xml_path():
     appdir = app_dir()
-    return path.join(app_dir, 'factur.html')
+    return path.join(appdir, 'factur.html')
 
 
 def app_file(file):
