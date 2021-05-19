@@ -14,14 +14,14 @@ def attach_e_pdf(doc, events=None):
     # Data For Company
     data = {
         'name': html.escape(doc.name),
-        'issue_date': doc.posting_date,
+        'issue_date': doc.posting_date.replace('-', ''),
         'company': html.escape(doc.company),
         'tax_id': html.escape(doc.tax_id or ""),
         'customer': html.escape(doc.customer),
         'customer_name': html.escape(doc.customer_name),
         'currency': doc.currency,
         'payment_terms': html.escape(doc.payment_terms_template or ""),
-        'due_date': doc.due_date,
+        'due_date': doc.due_date.replace('-', ''),
         'total': doc.total,
         'discount': (doc.total - doc.net_total),
         'net_total': doc.net_total,
@@ -98,5 +98,4 @@ def attach_e_pdf(doc, events=None):
         xml = frappe.render_template(f.read(), data)
         pdf_data = get_pdf_data(doc.doctype, doc.name)
         pdf = generate_from_binary(pdf_data, xml.encode('utf-8'))
-        print(pdf)
         save_and_attach(pdf, doc.doctype, doc.name)
