@@ -1,6 +1,6 @@
-## Swiss Factur X E Invoicing
+## Swiss E-Invoicing App for ERPNext
 
-A E-Invoice PDF Creation library
+Swiss ERPNext App for E-Invoice Hybrid PDF based on Factur-X and ZugFerd
 
 #### License
 
