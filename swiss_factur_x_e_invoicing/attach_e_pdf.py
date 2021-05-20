@@ -1,5 +1,4 @@
 # Facturx
-from io import StringIO
 import frappe
 from frappe import _
 from facturx import generate_from_binary
