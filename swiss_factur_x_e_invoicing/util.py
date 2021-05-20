@@ -7,7 +7,7 @@ def get_pdf_data(doctype, name):
     """
     Get Print from Default Template
     """
-    html = frappe.get_print(doctype, name)
+    html = frappe.get_print(doctype, name, print_format="Standard")
     return frappe.utils.pdf.get_pdf(html)
 
 
