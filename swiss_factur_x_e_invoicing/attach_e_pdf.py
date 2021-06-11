@@ -5,7 +5,8 @@ from facturx import generate_from_binary
 import html
 from .uomcode import get_uom_code
 from .constant import raw_address
-from .util import app_file, get_pdf_data, save_and_attach
+from .util import app_file, get_pdf_data, get_percentage, save_and_attach
+import json
 
 
 def attach_e_pdf(doc, events=None):
@@ -34,6 +35,9 @@ def attach_e_pdf(doc, events=None):
 
     # Create Array of Items
     for item in doc.items:
+        tax = get_percentage(item, doc)
+        gross_price = (tax * item.rate / 100) + item.rate
+        amount = gross_price * item.qty
         item_data = {
             'idx': item.idx,
             'item_code': html.escape(item.item_code),
@@ -43,12 +47,15 @@ def attach_e_pdf(doc, events=None):
             'rate': item.rate,
             'unit_code': get_uom_code(item.uom),
             'qty': item.qty,
-            'amount': item.amount
+            'amount': item.amount,
+            'tax_percentage': tax,
+            'gross_price': gross_price,
+            'amount': amount
         }
         data['items'].append(item_data)
 
     # Taxation
-    if doc.taxes and doc.taxes[0].rate:
+    if doc.taxes and doc.taxes[0].rate is not None:
         data['overall_tax_rate_percent'] = doc.taxes[0].rate
         data['taxes'] = []
         for tax in doc.taxes:
