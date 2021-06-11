@@ -1,6 +1,14 @@
+import json
 import frappe
 from frappe.utils.file_manager import save_file
 from os import path
+
+
+def get_percentage(item, doc):
+    if item.item_tax_rate:
+        item_tax = json.loads(item.item_tax_rate)
+        return item_tax[list(item_tax.keys())[0]]
+    return doc.taxes[0].rate
 
 
 def get_pdf_data(doctype, name):
