@@ -39,32 +39,23 @@
       </ram:SpecifiedTradeProduct>
       <ram:SpecifiedLineTradeAgreement>
         <ram:GrossPriceProductTradePrice>
-          <ram:ChargeAmount
-            >{{ "{:.2f}".format(item.price_list_rate) }}</ram:ChargeAmount
-          >
+          <ram:ChargeAmount>{{ "{:.2f}".format(item.gross_price) }}</ram:ChargeAmount>
         </ram:GrossPriceProductTradePrice>
         <ram:NetPriceProductTradePrice>
           <ram:ChargeAmount>{{ "{:.2f}".format(item.rate) }}</ram:ChargeAmount>
         </ram:NetPriceProductTradePrice>
       </ram:SpecifiedLineTradeAgreement>
       <ram:SpecifiedLineTradeDelivery>
-        <ram:BilledQuantity unitCode="{{ item.unit_code }}"
-          >{{ item.qty }}</ram:BilledQuantity
-        >
+        <ram:BilledQuantity unitCode="{{ item.unit_code }}">{{ item.qty }}</ram:BilledQuantity>
       </ram:SpecifiedLineTradeDelivery>
       <ram:SpecifiedLineTradeSettlement>
         <ram:ApplicableTradeTax>
           <ram:TypeCode>VAT</ram:TypeCode>
           <ram:CategoryCode>S</ram:CategoryCode>
-          <ram:RateApplicablePercent
-            >{{ "{:.2f}".format(overall_tax_rate_percent)
-            }}</ram:RateApplicablePercent
-          >
+          <ram:RateApplicablePercent>{{ "{:.2f}".format(item.tax_percentage)}}</ram:RateApplicablePercent>
         </ram:ApplicableTradeTax>
         <ram:SpecifiedTradeSettlementLineMonetarySummation>
-          <ram:LineTotalAmount
-            >{{ "{:.2f}".format(item.amount) }}</ram:LineTotalAmount
-          >
+          <ram:LineTotalAmount>{{ "{:.2f}".format(item.amount) }}</ram:LineTotalAmount>
         </ram:SpecifiedTradeSettlementLineMonetarySummation>
       </ram:SpecifiedLineTradeSettlement>
     </ram:IncludedSupplyChainTradeLineItem>
@@ -99,15 +90,11 @@
       <ram:InvoiceCurrencyCode>{{ currency }}</ram:InvoiceCurrencyCode>
       {%- if taxes %} {%- for tax in taxes %}
       <ram:ApplicableTradeTax>
-        <ram:CalculatedAmount
-          >{{ "{:.2f}".format(tax.tax_amount) }}</ram:CalculatedAmount
-        >
+        <ram:CalculatedAmount>{{ "{:.2f}".format(tax.tax_amount) }}</ram:CalculatedAmount>
         <ram:TypeCode>VAT</ram:TypeCode>
         <ram:BasisAmount>{{ "{:.2f}".format(tax.net_amount) }}</ram:BasisAmount>
         <ram:CategoryCode>S</ram:CategoryCode>
-        <ram:RateApplicablePercent
-          >{{ "{:.2f}".format(tax.rate) }}</ram:RateApplicablePercent
-        >
+        <ram:RateApplicablePercent>{{ "{:.2f}".format(tax.rate) }}</ram:RateApplicablePercent>
       </ram:ApplicableTradeTax>
       {%- endfor %} {%- else %}
       <ram:ApplicableTradeTax>
@@ -126,25 +113,13 @@
       </ram:SpecifiedTradePaymentTerms>
       <ram:SpecifiedTradeSettlementHeaderMonetarySummation>
         <ram:LineTotalAmount>{{ "{:.2f}".format(total) }}</ram:LineTotalAmount>
-        <ram:ChargeTotalAmount
-          >{{ "{:.2f}".format(discount) }}</ram:ChargeTotalAmount
-        >
+        <ram:ChargeTotalAmount>{{ "{:.2f}".format(discount) }}</ram:ChargeTotalAmount>
         <ram:AllowanceTotalAmount>0.00</ram:AllowanceTotalAmount>
-        <ram:TaxBasisTotalAmount
-          >{{ "{:.2f}".format(net_total) }}</ram:TaxBasisTotalAmount
-        >
-        <ram:TaxTotalAmount currencyID="{{ currency }}"
-          >{{ "{:.2f}".format(total_tax) }}</ram:TaxTotalAmount
-        >
-        <ram:GrandTotalAmount
-          >{{ "{:.2f}".format(grand_total) }}</ram:GrandTotalAmount
-        >
-        <ram:TotalPrepaidAmount
-          >{{ "{:.2f}".format(prepaid_amount) }}</ram:TotalPrepaidAmount
-        >
-        <ram:DuePayableAmount
-          >{{ "{:.2f}".format(outstanding_amount) }}</ram:DuePayableAmount
-        >
+        <ram:TaxBasisTotalAmount>{{ "{:.2f}".format(net_total) }}</ram:TaxBasisTotalAmount>
+        <ram:TaxTotalAmount currencyID="{{ currency }}">{{ "{:.2f}".format(total_tax) }}</ram:TaxTotalAmount>
+        <ram:GrandTotalAmount>{{ "{:.2f}".format(grand_total) }}</ram:GrandTotalAmount>
+        <ram:TotalPrepaidAmount>{{ "{:.2f}".format(prepaid_amount) }}</ram:TotalPrepaidAmount>
+        <ram:DuePayableAmount>{{ "{:.2f}".format(outstanding_amount) }}</ram:DuePayableAmount>
       </ram:SpecifiedTradeSettlementHeaderMonetarySummation>
     </ram:ApplicableHeaderTradeSettlement>
   </rsm:SupplyChainTradeTransaction>
