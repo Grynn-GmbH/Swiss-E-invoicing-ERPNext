@@ -4,18 +4,18 @@ from facturx import generate_from_binary
 import html
 from .uomcode import get_uom_code
 from .constant import raw_address
-from .util import app_file, get_pdf_data, get_percentage, save_and_attach
-import json
+from .util import app_file, get_pdf_data, get_percentage, save_and_attach, taxAmount
 
 
 def attach_e_pdf(doc, events=None):
 
+    company = frappe.get_doc("Company", doc.company)
     # Data For Company
     data = {
         'name': html.escape(doc.name),
         'issue_date': doc.posting_date.replace('-', ''),
         'company': html.escape(doc.company),
-        'tax_id': html.escape(doc.tax_id or ""),
+        'tax_id': html.escape(company.tax_id or ""),
         'customer': html.escape(doc.customer),
         'customer_name': html.escape(doc.customer_name),
         'currency': doc.currency,
@@ -35,8 +35,7 @@ def attach_e_pdf(doc, events=None):
     # Create Array of Items
     for item in doc.items:
         tax = get_percentage(item, doc)
-        gross_price = (tax * item.rate / 100) + item.rate
-        amount = gross_price * item.qty
+        gross_price = item.price_list_rate * item.qty
         item_data = {
             'idx': item.idx,
             'item_code': html.escape(item.item_code),
@@ -49,23 +48,39 @@ def attach_e_pdf(doc, events=None):
             'amount': item.amount,
             'tax_percentage': tax,
             'gross_price': gross_price,
-            'amount': amount
+            'amount': item.amount
         }
         data['items'].append(item_data)
 
     # Taxation
-    if doc.taxes and doc.taxes[0].rate is not None:
+    if doc.taxes and len(doc.taxes) > 0:
         data['overall_tax_rate_percent'] = doc.taxes[0].rate
         data['taxes'] = []
         for tax in doc.taxes:
+            [amt, per] = taxAmount(tax.item_wise_tax_detail)
             tax_data = {
                 'tax_amount': tax.tax_amount,
-                'net_amount': (tax.total - tax.tax_amount),
-                'rate': tax.rate
+                'net_amount': amt,
+                'rate': per
             }
             data['taxes'].append(tax_data)
     else:
         data['overall_tax_rate_percent'] = 0
+
+    # Taxation
+    # data['taxes'] = []
+    # data['overall_tax_rate_percent'] = doc.taxes[0].rate
+    # for item in doc.items:
+    #     tax = get_percentage(item, doc)
+    #     print('tax is ', tax)
+    #     gross_price = (tax * item.rate / 100) + item.rate
+    #     amount = gross_price * item.qty
+    #     tax_data = {
+    #         'tax_amount': round((item.rate * item.qty * tax/100), 2),
+    #         'net_amount': round((item.rate * item.qty), 2),
+    #         'rate': tax
+    #     }
+    #     data['taxes'].append(tax_data)
 
     # Company
     company_address = frappe.get_doc("Address", doc.company_address)
@@ -85,7 +100,9 @@ def attach_e_pdf(doc, events=None):
         data['company_address'] = raw_address
 
     # Customer
+
     customer_address = frappe.get_doc("Address", doc.customer_address)
+
     if customer_address:
         customer_country_code = frappe.get_value(
             "Country", customer_address.country, "code").upper()
@@ -99,8 +116,15 @@ def attach_e_pdf(doc, events=None):
         }
     else:
         data['customer_address'] = raw_address
+
     with open(app_file('factur.html')) as f:
         xml = frappe.render_template(f.read(), data)
         pdf_data = get_pdf_data(doc.doctype, doc.name)
-        pdf = generate_from_binary(pdf_data, xml.encode('utf-8'))
+        pdf = generate_from_binary(
+            pdf_data, xml.encode('utf-8'), pdf_metadata={
+                'author': 'Grynn GMBH',
+                'keywords': 'Factur-X, Invoice',
+                'title': 'Invoice',
+                'subject': 'Factur-X invoice by Grynn GMBH',
+            })
         save_and_attach(pdf, doc.doctype, doc.name)
