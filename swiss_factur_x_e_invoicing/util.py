@@ -1,7 +1,9 @@
 import json
+import subprocess
 import frappe
 from frappe.utils.file_manager import save_file
 from os import path
+import tempfile
 
 
 def taxAmount(txt):
@@ -54,3 +56,15 @@ def get_xml_path():
 
 def app_file(file):
     return path.join(app_dir(), file)
+
+
+def convert_to_pdf_a_3(pdf_data):
+
+    with tempfile.NamedTemporaryFile(suffix='.pdf') as pdf:
+        pdf.write(pdf_data)
+
+        with tempfile.NamedTemporaryFile(suffix='.pdf') as conv_pdf:
+            args = ['gs', "-dPDFA=3", "-dBATCH", "-dNOPAUSE", "-dUseCIEColor", "-sProcessColorModel=DeviceCMYK",
+                    "-sDEVICE=pdfwrite", "-sPDFACompatibilityPolicy=1", "-sOutputFile={}".format(conv_pdf.name), "{}".format(pdf.name)]
+            subprocess.Popen(args).wait()
+            return open(conv_pdf.name, 'rb').read()

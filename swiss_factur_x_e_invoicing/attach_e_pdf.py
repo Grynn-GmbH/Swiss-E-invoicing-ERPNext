@@ -4,7 +4,8 @@ from facturx import generate_from_binary
 import html
 from .uomcode import get_uom_code
 from .constant import raw_address
-from .util import app_file, get_pdf_data, get_percentage, save_and_attach, taxAmount
+from .util import app_file, convert_to_pdf_a_3, get_pdf_data, get_percentage, save_and_attach, taxAmount
+import tempfile
 
 
 def attach_e_pdf(doc, events=None):
@@ -119,9 +120,11 @@ def attach_e_pdf(doc, events=None):
 
     with open(app_file('factur.html')) as f:
         xml = frappe.render_template(f.read(), data)
-        pdf_data = get_pdf_data(doc.doctype, doc.name)
+        pdf_temp_data = get_pdf_data(doc.doctype, doc.name)
+        pdf_data = convert_to_pdf_a_3(pdf_temp_data)
         pdf = generate_from_binary(
-            pdf_data, xml.encode('utf-8'), pdf_metadata={
+            pdf_data, xml.encode('utf-8'), level='en16931',
+            pdf_metadata={
                 'author': 'Grynn GMBH',
                 'keywords': 'Factur-X, Invoice',
                 'title': 'Invoice',
