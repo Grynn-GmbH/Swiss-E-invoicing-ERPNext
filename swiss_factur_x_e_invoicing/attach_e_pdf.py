@@ -68,21 +68,6 @@ def attach_e_pdf(doc, events=None):
     else:
         data['overall_tax_rate_percent'] = 0
 
-    # Taxation
-    # data['taxes'] = []
-    # data['overall_tax_rate_percent'] = doc.taxes[0].rate
-    # for item in doc.items:
-    #     tax = get_percentage(item, doc)
-    #     print('tax is ', tax)
-    #     gross_price = (tax * item.rate / 100) + item.rate
-    #     amount = gross_price * item.qty
-    #     tax_data = {
-    #         'tax_amount': round((item.rate * item.qty * tax/100), 2),
-    #         'net_amount': round((item.rate * item.qty), 2),
-    #         'rate': tax
-    #     }
-    #     data['taxes'].append(tax_data)
-
     # Company
     company_address = frappe.get_doc("Address", doc.company_address)
     if company_address:
