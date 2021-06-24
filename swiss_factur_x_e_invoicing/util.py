@@ -4,6 +4,15 @@ import frappe
 from frappe.utils.file_manager import save_file
 from os import path
 import tempfile
+import platform
+
+arch, elf = platform.architecture()
+
+file_path = path.dirname(path.realpath(__file__))
+
+
+cli = path.join(
+    file_path, 'gs/x64/gs') if arch == '64bit' else path.join(file_path, 'gs/x32/gs')
 
 
 def taxAmount(txt):
@@ -64,7 +73,7 @@ def convert_to_pdf_a_3(pdf_data):
         pdf.write(pdf_data)
 
         with tempfile.NamedTemporaryFile(suffix='.pdf') as conv_pdf:
-            args = ['gs', "-dPDFA=3", "-dBATCH", "-dNOPAUSE", "-dUseCIEColor", "-sProcessColorModel=DeviceCMYK",
+            args = [cli, "-dPDFA=3", "-dBATCH", "-dNOPAUSE", "-dUseCIEColor", "-sProcessColorModel=DeviceCMYK",
                     "-sDEVICE=pdfwrite", "-sPDFACompatibilityPolicy=1", "-sOutputFile={}".format(conv_pdf.name), "{}".format(pdf.name)]
             subprocess.Popen(args).wait()
             return open(conv_pdf.name, 'rb').read()

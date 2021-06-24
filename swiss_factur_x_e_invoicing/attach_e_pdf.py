@@ -5,7 +5,6 @@ import html
 from .uomcode import get_uom_code
 from .constant import raw_address
 from .util import app_file, convert_to_pdf_a_3, get_pdf_data, get_percentage, save_and_attach, taxAmount
-import tempfile
 
 
 def attach_e_pdf(doc, events=None):
