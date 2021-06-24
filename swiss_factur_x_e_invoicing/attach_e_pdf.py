@@ -25,9 +25,9 @@ def attach_e_pdf(doc, events=None):
         'discount': (doc.total - doc.net_total),
         'net_total': doc.net_total,
         'total_tax': doc.total_taxes_and_charges,
-        'grand_total': (doc.rounded_total or doc.grand_total),
-        'prepaid_amount': ((doc.rounded_total or doc.grand_total) - doc.outstanding_amount),
-        'outstanding_amount': doc.outstanding_amount
+        'grand_total': doc.grand_total,
+        'prepaid_amount': doc.total_advance,
+        'outstanding_amount': doc.grand_total
     }
 
     data['items'] = []
@@ -57,7 +57,8 @@ def attach_e_pdf(doc, events=None):
         data['overall_tax_rate_percent'] = doc.taxes[0].rate
         data['taxes'] = []
         for tax in doc.taxes:
-            [amt, per] = taxAmount(tax.item_wise_tax_detail)
+            [amt, per] = taxAmount(
+                tax.item_wise_tax_detail, doc.conversion_rate)
             tax_data = {
                 'tax_amount': tax.tax_amount,
                 'net_amount': amt,

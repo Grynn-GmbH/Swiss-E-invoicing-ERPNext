@@ -15,16 +15,16 @@ cli = path.join(
     file_path, 'gs/x64/gs') if arch == '64bit' else path.join(file_path, 'gs/x32/gs')
 
 
-def taxAmount(txt):
+def taxAmount(txt, conversion_rate=1):
     js = json.loads(txt)
     total_base = 0
     total_tax = 0
     for entry in js.values():
         if round(entry[0]) == 0:
             continue
-        amt = (entry[1] * 100)/entry[0]
+        amt = (entry[1] / conversion_rate * 100)/entry[0]
         total_base += amt
-        total_tax += entry[1]
+        total_tax += entry[1] / conversion_rate
 
     return round(total_base, 2), round((total_tax/total_base * 100), 2)
 
