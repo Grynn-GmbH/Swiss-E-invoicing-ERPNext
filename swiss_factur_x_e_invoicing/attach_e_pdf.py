@@ -80,6 +80,7 @@ def attach_e_pdf(doc, events=None):
     total_tax = totalTax(_taxes)
     data['total_tax'] = total_tax
     data['rounding_off'] = doc.total_taxes_and_charges - total_tax
+    data['grand_total'] = data['grand_total'] - data['rounding_off']
 
     # Company
     company_address = frappe.get_doc("Address", doc.company_address)
