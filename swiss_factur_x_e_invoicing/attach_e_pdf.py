@@ -78,8 +78,14 @@ def attach_e_pdf(doc, events=None):
 
     # Rounding Amount
     total_tax = totalTax(_taxes)
+
+    # Total Tax
     data['total_tax'] = total_tax
+
+    # Rounding Off
     data['rounding_off'] = doc.total_taxes_and_charges - total_tax
+
+    # Grand Total
     data['grand_total'] = data['grand_total'] - data['rounding_off']
 
     # Company
