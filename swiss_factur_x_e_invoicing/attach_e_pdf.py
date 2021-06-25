@@ -60,7 +60,7 @@ def attach_e_pdf(doc, events=None):
             _taxes[percentage]['net_amount'] = 0.0
             _taxes[percentage]['tax_amount'] = 0.0
 
-        _taxes[percentage]['rate'] += percentage
+        _taxes[percentage]['rate'] = percentage
         _taxes[percentage]['net_amount'] += item.amount
         _taxes[percentage]['tax_amount'] += tax
 
