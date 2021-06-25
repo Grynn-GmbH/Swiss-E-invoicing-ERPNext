@@ -28,14 +28,17 @@ def taxAmount(txt, conversion_rate=1):
 
     return round(total_base, 2), round((total_tax/total_base * 100), 2)
 
-# TODO: Fix This
-
 
 def get_percentage(item, doc):
-    if item.item_tax_rate is not None:
-        item_tax = json.loads(item.item_tax_rate)
-        return item_tax[list(item_tax.keys())[0]]
-    return doc.taxes[0].rate
+    percentage = 0.0
+    tax_amt = 0.0
+    for tax in doc.taxes:
+        taxes = json.loads(tax.item_wise_tax_detail)
+        percentage += taxes[item.item_code][0]
+        tax_amt += taxes[item.item_code][1]/doc.conversion_rate
+
+    print(tax_amt)
+    return [percentage, round(tax_amt, 2)]
 
 
 def get_pdf_data(doctype, name):
@@ -77,3 +80,11 @@ def convert_to_pdf_a_3(pdf_data):
                     "-sDEVICE=pdfwrite", "-sPDFACompatibilityPolicy=1", "-sOutputFile={}".format(conv_pdf.name), "{}".format(pdf.name)]
             subprocess.Popen(args).wait()
             return open(conv_pdf.name, 'rb').read()
+
+
+def totalTax(taxes):
+    base_tax = 0
+    for tax in taxes.values():
+        base_tax += tax['tax_amount']
+
+    return base_tax
