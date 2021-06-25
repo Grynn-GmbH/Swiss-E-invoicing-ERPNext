@@ -117,6 +117,7 @@
         <ram:AllowanceTotalAmount>0.00</ram:AllowanceTotalAmount>
         <ram:TaxBasisTotalAmount>{{ "{:.2f}".format(net_total) }}</ram:TaxBasisTotalAmount>
         <ram:TaxTotalAmount currencyID="{{ currency }}">{{ "{:.2f}".format(total_tax) }}</ram:TaxTotalAmount>
+        <ram:RoundingAmount>{{ "{:.2f}".format(rounding_off) }}</ram:RoundingAmount>
         <ram:GrandTotalAmount>{{ "{:.2f}".format(grand_total) }}</ram:GrandTotalAmount>
         <ram:TotalPrepaidAmount>{{ "{:.2f}".format(prepaid_amount) }}</ram:TotalPrepaidAmount>
         <ram:DuePayableAmount>{{ "{:.2f}".format(outstanding_amount) }}</ram:DuePayableAmount>
