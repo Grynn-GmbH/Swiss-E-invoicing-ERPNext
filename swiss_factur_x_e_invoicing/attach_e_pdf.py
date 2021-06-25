@@ -4,7 +4,7 @@ from facturx import generate_from_binary
 import html
 from .uomcode import get_uom_code
 from .constant import raw_address
-from .util import app_file, convert_to_pdf_a_3, get_pdf_data, get_percentage, save_and_attach, taxAmount
+from .util import app_file, convert_to_pdf_a_3, get_pdf_data, get_percentage, save_and_attach, taxAmount, totalTax
 
 
 def attach_e_pdf(doc, events=None):
@@ -22,7 +22,7 @@ def attach_e_pdf(doc, events=None):
         'payment_terms': html.escape(doc.payment_terms_template or ""),
         'due_date': doc.due_date.replace('-', ''),
         'total': doc.total,
-        'discount': (doc.total - doc.net_total),
+        'discount': doc.discount_amount,
         'net_total': doc.net_total,
         'total_tax': doc.total_taxes_and_charges,
         'grand_total': doc.grand_total,
@@ -31,10 +31,11 @@ def attach_e_pdf(doc, events=None):
     }
 
     data['items'] = []
+    _taxes = {}
 
     # Create Array of Items
     for item in doc.items:
-        tax = get_percentage(item, doc)
+        per_item, _ = get_percentage(item, doc)
         gross_price = item.price_list_rate * item.qty
         item_data = {
             'idx': item.idx,
@@ -46,27 +47,39 @@ def attach_e_pdf(doc, events=None):
             'unit_code': get_uom_code(item.uom),
             'qty': item.qty,
             'amount': item.amount,
-            'tax_percentage': tax,
+            'tax_percentage': per_item,
             'gross_price': gross_price,
             'amount': item.amount
         }
+
+        percentage, tax = get_percentage(item, doc)
+
+        if _taxes.get(percentage) is None:
+            _taxes[percentage] = {}
+            _taxes[percentage]['rate'] = 0.0
+            _taxes[percentage]['net_amount'] = 0.0
+            _taxes[percentage]['tax_amount'] = 0.0
+
+        _taxes[percentage]['rate'] += percentage
+        _taxes[percentage]['net_amount'] += item.amount
+        _taxes[percentage]['tax_amount'] += tax
+
         data['items'].append(item_data)
 
-    # Taxation
-    if doc.taxes and len(doc.taxes) > 0:
-        data['overall_tax_rate_percent'] = doc.taxes[0].rate
-        data['taxes'] = []
-        for tax in doc.taxes:
-            [amt, per] = taxAmount(
-                tax.item_wise_tax_detail, doc.conversion_rate)
-            tax_data = {
-                'tax_amount': tax.tax_amount,
-                'net_amount': amt,
-                'rate': per
-            }
-            data['taxes'].append(tax_data)
-    else:
-        data['overall_tax_rate_percent'] = 0
+    data['taxes'] = []
+
+    for tax in _taxes.values():
+        tax_dic = {
+            'rate': (tax['rate']),
+            'net_amount': tax['net_amount'],
+            'tax_amount': tax['tax_amount']
+        }
+        data['taxes'].append(tax_dic)
+
+    # Rounding Amount
+    total_tax = totalTax(_taxes)
+    data['total_tax'] = total_tax
+    data['rounding_off'] = doc.total_taxes_and_charges - total_tax
 
     # Company
     company_address = frappe.get_doc("Address", doc.company_address)
