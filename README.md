@@ -5,8 +5,8 @@ Swiss ERPNext App for E-Invoice Hybrid PDF based on Factur-X and ZugFerd. The PD
 
 ## Limitations
 
-- Sales Taxes and Charges Table should ONLY CONTAIN TAX/VAT Element. 
-- No Charges should be added in this section as Factur-X / ZugFERD does not accept TAX/VAT at header level
+- Sales Taxes and Charges Table should ONLY CONTAIN TAX/VAT Element. Therefore, No Charges should be added in this section as Factur-X / ZugFERD does not accept TAX/VAT at header level
+- No discounts to be added at the header level. 
 - This limitation will NOT break ERPNext functionality but will generate a non-valid e-invoice, which will be rejected by your customer.
 
 
