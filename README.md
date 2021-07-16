@@ -22,6 +22,8 @@ bench --site <your site> install-app swiss_factur_x_e_invoicing
 - Company Name / Company Address / Company Tax ID are required to be present. 
 - There is no settings or configuration needs to provide for this app
 
-#### License
+## Reporting Issues
+Kindly open an issue on github to report any issues or ask any questions. 
 
+#### License
 GPL V3
